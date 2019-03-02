@@ -7,9 +7,11 @@ def create_table():
     command = """
         CREATE TABLE packets (
             id SERIAL PRIMARY KEY,
+            total integer NOT NULL,
             total_tcp integer NOT NULL,
             total_http integer NOT NULL,
             total_udp integer NOT NULL,
+            size integer NOT NULL,
             size_tcp integer NOT NULL,
             size_http integer NOT NULL,
             size_udp integer NOT NULL,
