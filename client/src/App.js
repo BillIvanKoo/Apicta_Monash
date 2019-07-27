@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-// import socketIOClient from "socket.io-client";
+import socketIOClient from "socket.io-client";
 import axios from 'axios';
 
 import TotalSizeChart from "./components/TotalSizeChart";
@@ -11,7 +11,7 @@ class App extends React.Component {
     super();
     this.state = {
       url: "http://localhost:8888",
-      // socket: socketIOClient("http://localhost:8888/socket")
+      socket: socketIOClient("http://localhost:8888/socket"),
       packetList: [],
       activePacket: {
         port_src: [],
