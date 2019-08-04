@@ -2,25 +2,38 @@ const model = require("../models");
 const Packet = model.Packet;
 const socket = require('../utils/socket');
 
-getPackets = (req, res) => {
+packetQuery = (limit) => {
     let option = {
         attributes: ['id', 'total', 'total_tcp', 'total_http', 'total_udp', 'timestamp', 'size', 'size_tcp', 'size_http', 'size_udp']
     }
-    if (req.query.limit) {
+    if (limit) {
         option = {...option,
-            limit: Number(req.query.limit),
+            limit: Number(limit),
             order: [['createdAt', 'DESC']]
         }
     }
-    Packet.findAll(option)
+    return Packet.findAll(option)
+}
+
+io.of('/socket').on('connection', socket =>{
+    packetQuery(10)
     .then( packets => {
-        res.send(packets);
+        socket.emit("send packet list", {
+            packets
+        })
     })
+})
+
+getPackets = (req, res) => {
+    packetQuery(req.query.limit)
+    .then( packets => {res.send(packets)})
 }
 
 getPacket = (req, res) => {
     Packet.findOne({
-        id: req.params.id
+        where: {
+            id: Number(req.params.id)
+        }
     })
     .then( packet => {
         res.send(packet);
@@ -30,6 +43,12 @@ getPacket = (req, res) => {
 addPacket = (req, res) => {
     Packet.create(req.body)
     .then( newPacket => {
+        packetQuery(10)
+        .then( packets => {
+            io.of('/socket').emit("send packet list", {
+                packets
+            })
+        })
         res.send(newPacket);
     })
 }
