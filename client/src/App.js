@@ -1,17 +1,16 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import socketIOClient from "socket.io-client";
 import axios from 'axios';
 
-import TotalSizeChart from "./components/TotalSizeChart";
+import PacketLinePie from "./components/PacketLinePie";
 import PortMacList from './components/PortMacList';
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      url: "http://localhost:8888",
-      socket: socketIOClient("http://localhost:8888/socket"),
+      endpoint: "http://localhost:8888",
       packetList: [],
       activePacket: {
         port_src: [],
@@ -27,29 +26,45 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let that = this
-    axios.get(this.state.url + "/packets?limit=10").then(res => {
-      that.setState({packetList: res.data.reverse()})
-    })
+    const { endpoint } = this.state;
+    const socket = socketIOClient(`${endpoint}/socket`);
+    socket.on("send packet list", data => this.setState({
+      packetList: data.packets
+    }))
   }
 
   getPacket(id) {
     let that = this
-    axios.get(`${this.state.url}/packets/${id}`).then(res =>{
+    console.log(id)
+    axios.get(`${this.state.endpoint}/packets/${id}`).then(res =>{
       that.setState({activePacket: res.data})
     })
   }
   
   render() {
     return (
-      <Container fluid>
-        <TotalSizeChart
-          packetList={this.state.packetList}
-          handleClick={id=>{this.getPacket(id)}}
-        />
-        <PortMacList
-          activePacket={this.state.activePacket}
-        />
+      <Container fluid style={{backgroundColor: "#86AC41"}}>
+        <Row>
+          <Col md={5}>
+            <PacketLinePie
+              name={"Total"}
+              packetList={this.state.packetList}
+              handleClick={i=>{this.getPacket(this.state.packetList[i].id)}}
+            />
+          </Col>
+          <Col md={5}>
+            <PacketLinePie
+              name={"Size"}
+              packetList={this.state.packetList}
+              handleClick={i=>{this.getPacket(this.state.packetList[i].id)}}
+            />
+          </Col>
+          <Col md={2}>
+            <PortMacList
+              activePacket={this.state.activePacket}
+            />
+          </Col>
+        </Row>
       </Container>
     );
   }

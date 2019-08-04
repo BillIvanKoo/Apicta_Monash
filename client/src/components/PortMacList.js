@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import { ListGroup, InputGroup, FormControl, Tabs, Tab } from 'react-bootstrap';
-
-
+import { ListGroup, InputGroup, FormControl, Tabs, Tab, Nav, NavDropdown, DropdownButton, Dropdown } from 'react-bootstrap';
 
 class PortMacList extends Component{
     constructor(props){
         super(props)
         this.state = {
-            searchValue: ""
+            searchValue: "",
+            activeTitle: ""
         }
     }
 
@@ -40,22 +39,40 @@ class PortMacList extends Component{
                         onChange={(e)=>{this.handleType(e)}}
                     />
                 </InputGroup>
-                <Tabs>
-                    {Object.keys(this.props.activePacket)
+                <Tab.Container>
+                    <DropdownButton title={this.state.activeTitle}>
+                        {Object.keys(this.props.activePacket)
                         .filter(key => Array.isArray(this.props.activePacket[key]))
                         .map(key => (
-                            <Tab eventKey={key} title={key} key={key}>
-                                <ListGroup
-                                    style={{
-                                        maxHeight: "400px",
-                                        overflowY: "scroll"
-                                    }}
-                                >
-                                    {this.handleList(key)}
-                                </ListGroup>
-                            </Tab>
+                            <Dropdown.Item
+                                eventKey={key}
+                                title={key}
+                                key={key}
+                                onSelect={()=>{
+                                    this.setState({activeTitle: key})
+                                }}
+                            >
+                                {key}
+                            </Dropdown.Item>
                         ))}
-                </Tabs>
+                    </DropdownButton>
+                    <Tab.Content>
+                    {Object.keys(this.props.activePacket)
+                            .filter(key => Array.isArray(this.props.activePacket[key]))
+                            .map(key => (
+                                <Tab.Pane eventKey={key} title={key} key={key}>
+                                    <ListGroup
+                                        style={{
+                                            maxHeight: "400px",
+                                            overflowY: "scroll"
+                                        }}
+                                    >
+                                        {this.handleList(key)}
+                                    </ListGroup>
+                                </Tab.Pane>
+                            ))}
+                    </Tab.Content>
+                </Tab.Container>
             </div>    
         )
     }
