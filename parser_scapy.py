@@ -3,7 +3,6 @@ os.sys.path.append('/home/bill/anaconda3/lib/python36.zip')
 os.sys.path.append('/home/bill/anaconda3/lib/python3.6')
 os.sys.path.append('/home/bill/anaconda3/lib/python3.6/lib-dynload')
 os.sys.path.append('/home/bill/anaconda3/lib/python3.6/site-packages')
-print(os.sys.path)
 from scapy.all import *
 from scapy_http.http import *
 import sys
@@ -13,9 +12,9 @@ import time
 import copy
 
 current_milli_time = lambda: int(round(time.time() * 1000))
-def get_new_packet_data():
+def get_new_packet_data(timestamp):
     return {
-        "timestamp": current_milli_time(),
+        "timestamp": timestamp,
         "total": 0,
         "total_tcp": 0,
         "total_http": 0,
@@ -24,6 +23,7 @@ def get_new_packet_data():
         "size_tcp": 0,
         "size_http": 0,
         "size_udp": 0,
+        "segmentId": 1,
         "port_src": set(),  # tcp+udp
         "port_src_tcp": set(),
         "port_src_udp": set(),
@@ -140,15 +140,16 @@ def pkt_callback(pkt, packet_data):
 #     data["data"].append(packet_data)
 #     json.dump(data, f)
 
-def print_connected():
+def handle_connected(pkt_data_wrapper):
     print("IM CONNECTED")
+    
 
 def print_capture():
     print("capture")
 
-def capture_handler(pkt_data_wrapper, sio, namespace):
+def capture_handler(data, pkt_data_wrapper, sio, namespace):
     pd = copy.deepcopy(pkt_data_wrapper["pkt_data"])
-    pkt_data_wrapper["pkt_data"]=get_new_packet_data()
+    pkt_data_wrapper["pkt_data"]=get_new_packet_data(data)
     print(pd["timestamp"])
     # change set to list
     pd["port_src"] = list(pd["port_src"])
@@ -167,14 +168,17 @@ if __name__ == "__main__":
     sio = socketio.Client()
     sio.connect(url, namespaces=[namespace])
 
-    pkt_data = get_new_packet_data()
-    pkt_data_wrapper={"pkt_data":pkt_data}
+    pkt_data_wrapper = {}
+    pkt_data_wrapper["pkt_data"] = get_new_packet_data(int(round(time.time() )))
 
-    sio.on("connect", namespace=namespace, handler=print_connected)
+    sio.on("connect", namespace=namespace, handler=lambda : handle_connected(pkt_data_wrapper))
     
-    sio.on("capture", namespace=namespace, handler=lambda : capture_handler(pkt_data_wrapper,sio, namespace))
+    sio.on("capture", namespace=namespace, handler=lambda data : capture_handler(data, pkt_data_wrapper, sio, namespace))
     
+    while pkt_data_wrapper == {}:
+        if pkt_data_wrapper != {}:
+            break
     try:
-        sniff(iface=sys.argv[1:], prn= lambda pkt: pkt_callback(pkt, pkt_data))
+        sniff(iface=sys.argv[1:], prn= lambda pkt: pkt_callback(pkt, pkt_data_wrapper["pkt_data"]))
     except AttributeError as e:
         print(e)
