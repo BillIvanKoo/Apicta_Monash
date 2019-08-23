@@ -15,7 +15,7 @@ module.exports = (sequelize, type) => {
     size_tcp: type.INTEGER,
     size_http: type.INTEGER,
     size_udp: type.INTEGER,
-    segment_id: type.INTEGER,
+    segmentId: type.INTEGER,
     port_src: {
         type: type.TEXT,
         get: function() {
@@ -119,10 +119,20 @@ module.exports = (sequelize, type) => {
         set: function(val) {
             return this.setDataValue('mac_dst', JSON.stringify(val));
         }
-    }
+    },
+    connected: type.BOOLEAN,
+    contain_anomaly: type.BOOLEAN,
+    total_score: type.FLOAT,
+    total_tcp_score: type.FLOAT,
+    total_http_score: type.FLOAT,
+    total_udp_score: type.FLOAT,
+    size_score: type.BOOLEAN,
+    size_tcp_score: type.FLOAT,
+    size_http_score: type.FLOAT,
+    size_udp_score: type.FLOAT
   }, {});
   Packet.associate = function(models) {
-    // associations can be defined here
+    Packet.belongsTo(models.Segment, {foreignKey: 'segment_id', as: 'segment'})
   };
   return Packet;
 };

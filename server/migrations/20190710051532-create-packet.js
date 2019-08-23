@@ -35,7 +35,7 @@ module.exports = {
       size_udp: {
         type: Sequelize.INTEGER
       },
-      segment_id: {
+      segmentId: {
         type: Sequelize.INTEGER
       },
       port_src: {
@@ -69,7 +69,40 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+      connected: {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
+      contain_anomaly: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      total_score: {
+        type: Sequelize.FLOAT
+      },
+      total_tcp_score: {
+        type: Sequelize.FLOAT
+      },
+      total_http_score: {
+        type: Sequelize.FLOAT
+      },
+      total_udp_score: {
+        type: Sequelize.FLOAT
+      },
+      size_score: {
+        type: Sequelize.FLOAT
+      },
+      size_tcp_score: {
+        type: Sequelize.FLOAT
+      },
+      size_http_score: {
+        type: Sequelize.FLOAT
+      },
+      size_udp_score: {
+        type: Sequelize.FLOAT
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
