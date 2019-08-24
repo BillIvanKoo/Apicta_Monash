@@ -15,7 +15,7 @@ packetQuery = (limit, anomaly) => {
     if (anomaly) {
         option = {...option,
             where: {
-                anomaly: true
+                contain_anomaly: true
             }
         }
     }
@@ -42,14 +42,23 @@ Socket.io.of('/socket').on('connection', socket => {
 })
 
 
-// for capture machine
+for capture machine
 let captureConnected = 0
 setTimeout(() => {
     setInterval(() => {
         if (captureConnected == 0){
             Packet.create({
                 connected: false,
-                timestamp: Date.now() / 1000
+                timestamp: Date.now() / 1000,
+                total: 0,
+                total_tcp: 0,
+                total_http: 0,
+                total_udp: 0,
+                size: 0,
+                size_tcp: 0,
+                size_http: 0,
+                size_udp: 0,
+                segmentId: 1
             }).then(_ => {
                 updateClient()
             })
@@ -135,4 +144,22 @@ getAnomalies = (req, res) => {
     .then(packets => {res.send(packets)})
 }
 
-module.exports = { getPackets, getPacket, addPacket }
+getPacketsInAnHour = (req, res) => {
+    let time = Number(req.params.time);
+    let start = time - (time % 3600);
+    let end = start + 3600;
+    let option = {
+        attributes: ['id', 'total', 'total_tcp', 'total_http', 'total_udp', 'timestamp', 'size', 'size_tcp', 'size_http', 'size_udp', 'connected', 'contain_anomaly', 'total_score', 'total_tcp_score', 'total_http_score', 'total_udp_score', 'size_score', 'size_tcp_score', 'size_http_score', 'size_udp_score'],
+        where: {
+            timestamp: {
+                $between: [start, end]
+            }
+        }
+    }
+    Packet.findAll(option)
+    .then(packets => res.send(packets))
+    .catch(err => res.send(err))
+
+}
+
+module.exports = { getPackets, getPacket, addPacket, getAnomalies, getPacketsInAnHour }
