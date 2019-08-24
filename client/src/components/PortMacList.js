@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { ListGroup, InputGroup, FormControl, Tabs, Tab, Nav, NavDropdown, DropdownButton, Dropdown } from 'react-bootstrap';
 
+import { titleCase } from './helper/functions';
+import { COLOR1 } from './helper/constants';
+
 class PortMacList extends Component{
     constructor(props){
         super(props)
         this.state = {
             searchValue: "",
-            activeTitle: ""
+            activeTitle: "Port Src"
         }
     }
 
@@ -39,7 +42,7 @@ class PortMacList extends Component{
                         onChange={(e)=>{this.handleType(e)}}
                     />
                 </InputGroup>
-                <Tab.Container>
+                <Tab.Container defaultActiveKey="port_src">
                     <DropdownButton title={this.state.activeTitle}>
                         {Object.keys(this.props.activePacket)
                         .filter(key => Array.isArray(this.props.activePacket[key]))
@@ -49,10 +52,10 @@ class PortMacList extends Component{
                                 title={key}
                                 key={key}
                                 onSelect={()=>{
-                                    this.setState({activeTitle: key})
+                                    this.setState({activeTitle: titleCase(key)})
                                 }}
                             >
-                                {key}
+                                {titleCase(key)}
                             </Dropdown.Item>
                         ))}
                     </DropdownButton>

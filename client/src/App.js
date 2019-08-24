@@ -1,10 +1,13 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import { BrowserRouter as Router, Route} from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 import axios from 'axios';
 
-import PacketLinePie from "./components/PacketLinePie";
-import PortMacList from './components/PortMacList';
+import TopBar from './components/TopBar';
+import LivePage from './components/LivePage';
+import LandingPage from './components/LandingPage';
+import AnomalyPage from './components/AnomalyPage';
+import HistoryPage from './components/HistoryPage';
 
 class App extends React.Component {
   constructor() {
@@ -28,9 +31,9 @@ class App extends React.Component {
   componentDidMount() {
     const { endpoint } = this.state;
     const socket = socketIOClient(`${endpoint}/socket`);
-    socket.on("send packet list", data => this.setState({
+    socket.on("send packet list", data => {this.setState({
       packetList: data.packets
-    }))
+    })})
   }
 
   getPacket(id) {
@@ -43,29 +46,13 @@ class App extends React.Component {
   
   render() {
     return (
-      <Container fluid style={{backgroundColor: "#86AC41"}}>
-        <Row>
-          <Col md={5}>
-            <PacketLinePie
-              name={"Total"}
-              packetList={this.state.packetList}
-              handleClick={i=>{this.getPacket(this.state.packetList[i].id)}}
-            />
-          </Col>
-          <Col md={5}>
-            <PacketLinePie
-              name={"Size"}
-              packetList={this.state.packetList}
-              handleClick={i=>{this.getPacket(this.state.packetList[i].id)}}
-            />
-          </Col>
-          <Col md={2}>
-            <PortMacList
-              activePacket={this.state.activePacket}
-            />
-          </Col>
-        </Row>
-      </Container>
+      <Router>
+        <TopBar></TopBar>
+        <Route exact path="/" component={LandingPage}/>
+        <Route path="/live" component={LivePage}/>
+        <Route path="/anomalies" component={AnomalyPage}/>
+        <Route path="/historical" component={HistoryPage}/>
+      </Router>
     );
   }
 }
