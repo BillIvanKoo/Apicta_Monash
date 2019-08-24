@@ -15,7 +15,10 @@ module.exports = (sequelize, type) => {
     size_tcp: type.INTEGER,
     size_http: type.INTEGER,
     size_udp: type.INTEGER,
-    segmentId: type.INTEGER,
+    segmentId: {
+        type: type.INTEGER,
+        allowNull: false
+    },
     port_src: {
         type: type.TEXT,
         get: function() {
@@ -132,7 +135,7 @@ module.exports = (sequelize, type) => {
     size_udp_score: type.FLOAT
   }, {});
   Packet.associate = function(models) {
-    Packet.belongsTo(models.Segment, {foreignKey: 'segment_id', as: 'segment'})
+    Packet.belongsTo(models.Segment, {foreignKey: 'segmentId', as: 'segment'})
   };
   return Packet;
 };
