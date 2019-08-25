@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Scatter } from "react-chartjs-2";
 
 import * as Constants from './helper/constants';
+import { titleCase } from './helper/functions';
 
 class TotalSizeLine extends Component{
     constructor(props){
@@ -104,6 +105,7 @@ class TotalSizeLine extends Component{
                 ...that.state.data,
                 datasets: ['', '_tcp', '_http', '_udp'].map((v, i) => ({
                     ...that.state.data.datasets[i],
+                    label: v === '' ? titleCase(`${name}_packets`) : titleCase(`${name}${v}`),
                     data: packetList.map(packet => ({
                         x: packet.timestamp,
                         y: packet[`${name}${v}`]
@@ -128,12 +130,12 @@ class TotalSizeLine extends Component{
                     }),
                     pointRadius: packetList.map(packet => {
                         if (!packet.connected){
-                            return 5
+                            return 9
                         }
                         if (packet[`${name}${v}_score`] >= 0.9){
-                            return 6
+                            return 8
                         }
-                        return 3
+                        return 2
                     })
                 }))
             },
