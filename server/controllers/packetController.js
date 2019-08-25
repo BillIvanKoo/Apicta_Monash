@@ -42,7 +42,7 @@ Socket.io.of('/socket').on('connection', socket => {
 })
 
 
-for capture machine
+// for capture machine
 let captureConnected = 0
 setTimeout(() => {
     setInterval(() => {
