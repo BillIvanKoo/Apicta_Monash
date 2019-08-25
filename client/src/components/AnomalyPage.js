@@ -22,6 +22,14 @@ class AnomalyPage extends Component {
             console.log(err)
         })
     }
+
+    handleClick(data) {
+        this.props.history.push({
+            pathname: "/historical",
+            data
+        })
+    }
+
     render() {
         return(
             <Accordion>
@@ -31,6 +39,9 @@ class AnomalyPage extends Component {
                             <Accordion.Toggle as={Button} variant="link" eventKey={packet.id}>
                                 {new Date(packet.timestamp * 1000).toLocaleString()}
                             </Accordion.Toggle>
+                            <Button onClick={()=>{this.handleClick(packet)}}>
+                                Go to Historical &#10148;
+                            </Button>
                         </Card.Header>
                         <Accordion.Collapse eventKey={packet.id}>
                             <Card.Body>
