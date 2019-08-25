@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListGroup, InputGroup, FormControl, Tabs, Tab, Nav, NavDropdown, DropdownButton, Dropdown } from 'react-bootstrap';
+import { ListGroup, InputGroup, FormControl, Tab, Dropdown } from 'react-bootstrap';
 
 import { titleCase } from './helper/functions';
 import { COLOR1 } from './helper/constants';
@@ -43,22 +43,27 @@ class PortMacList extends Component{
                     />
                 </InputGroup>
                 <Tab.Container defaultActiveKey="port_src">
-                    <DropdownButton title={this.state.activeTitle}>
-                        {Object.keys(this.props.activePacket)
-                        .filter(key => Array.isArray(this.props.activePacket[key]))
-                        .map(key => (
-                            <Dropdown.Item
-                                eventKey={key}
-                                title={key}
-                                key={key}
-                                onSelect={()=>{
-                                    this.setState({activeTitle: titleCase(key)})
-                                }}
-                            >
-                                {titleCase(key)}
-                            </Dropdown.Item>
-                        ))}
-                    </DropdownButton>
+                    <Dropdown title={this.state.activeTitle}>
+                        <Dropdown.Toggle style={{borderColor: COLOR1, backgroundColor: COLOR1}}>
+                            {this.state.activeTitle}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {Object.keys(this.props.activePacket)
+                            .filter(key => Array.isArray(this.props.activePacket[key]))
+                            .map(key => (
+                                <Dropdown.Item
+                                    eventKey={key}
+                                    title={key}
+                                    key={key}
+                                    onSelect={()=>{
+                                        this.setState({activeTitle: titleCase(key)})
+                                    }}
+                                >
+                                    {titleCase(key)}
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
                     <Tab.Content>
                     {Object.keys(this.props.activePacket)
                             .filter(key => Array.isArray(this.props.activePacket[key]))

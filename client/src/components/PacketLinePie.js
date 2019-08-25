@@ -48,11 +48,10 @@ class PacketLinePie extends React.Component {
         return (
             <div style={{...this.props.style}}>
                 <Card
-                style={{margin: "2.5vh 0vh 1.25vh 0vh", height: "37.5vh"}}
+                style={{margin: "3.5vh 0vh 1.5vh 0vh", height: "37.5vh"}}
                 >
-                    <Card.Body>
+                    <Card.Body style={{height: "37.5vh"}}>
                         <TotalSizeLine
-                            style={{maxHeight: "37.5vh"}}
                             packetList={this.props.packetList}
                             name={this.props.name}
                             handleClick={this.props.handleClick}
@@ -60,11 +59,10 @@ class PacketLinePie extends React.Component {
                     </Card.Body>
                 </Card>
                 <Card
-                style={{margin: "1.25vh 0vh 2.5vh 0vh", height: "37.5vh"}}
+                style={{margin: "1.5vh 0vh 3.5vh 0vh", height: "37.5vh"}}
                 >
-                    <Card.Body>
+                    <Card.Body style={{height: "37.5vh"}}>
                         <Pie 
-                            style={{maxHeight: "37.5vh"}}
                             data={this.state.pie}
                             options={{
                                 responsive: true,

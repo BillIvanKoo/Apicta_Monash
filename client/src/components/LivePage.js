@@ -43,18 +43,18 @@ class LivePage extends React.Component {
   render() {
     return (
         <Container fluid style={{maxHeight: "85vh", backgroundColor: Constant.COLOR1}}>
-          <Row style={{maxHeight: "inherit"}}>
-            <Col md={6} style={{maxHeight: "inherit", padding: "0 0.75vw 0 2vw"}}>
+          <Row style={{height: "85vh"}}>
+            <Col md={6} style={{height: "85vh", padding: "0 0.75vw 0 2vw"}}>
               <PacketLinePie
-                style={{maxHeight: "inherit"}}
+                style={{height: "81.5vh"}}
                 name={"Total"}
                 packetList={this.state.packetList}
                 handleClick={i=>{this.handleClick(this.state.packetList[i])}}
               />
             </Col>
-            <Col md={6} style={{maxHeight: "inherit", padding: "0 2vw 0 0.75vw"}}>
+            <Col md={6} style={{height: "85vh", padding: "0 2vw 0 0.75vw"}}>
               <PacketLinePie
-                style={{maxHeight: "inherit"}}
+                style={{height: "81.5vh"}}
                 name={"Size"}
                 packetList={this.state.packetList}
                 handleClick={i=>{this.handleClick(this.state.packetList[i])}}

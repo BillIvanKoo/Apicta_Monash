@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col, Card, Form, InputGroup, DropdownButton, ButtonGroup, Button, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, InputGroup, ButtonGroup, Button, Dropdown } from 'react-bootstrap';
 import axios from 'axios';
 import { Pie } from 'react-chartjs-2';
 
@@ -169,7 +169,7 @@ class HistoryPage extends Component {
                                     <Dropdown
                                         as={InputGroup.Append}
                                     >
-                                        <Dropdown.Toggle>
+                                        <Dropdown.Toggle style={{borderColor: Constant.COLOR1, backgroundColor: Constant.COLOR1}}>
                                             {this.state.selectedHour}
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu style={{height: "20vh", overflowY: "scroll"}}>
@@ -183,15 +183,24 @@ class HistoryPage extends Component {
                                         </Dropdown.Menu>
                                     </Dropdown>
                                     <ButtonGroup as={InputGroup.Append}>
-                                        <Button onClick={()=>{this.handleSubmit()}}>Submit</Button>
+                                        <Button
+                                            style={{borderColor: Constant.COLOR4, backgroundColor: Constant.COLOR4}}
+                                            onClick={()=>{this.handleSubmit()}}
+                                        >
+                                            Submit
+                                        </Button>
                                     </ButtonGroup>
-                                    <DropdownButton
+                                    <Dropdown
                                     as={InputGroup.Append}
-                                    title={this.state.selectedView}
                                     >
-                                        <Dropdown.Item onSelect={()=>{this.setState({selectedView: "Total"})}}>Total Number</Dropdown.Item>
-                                        <Dropdown.Item onSelect={()=>{this.setState({selectedView: "Size"})}}>Total Size</Dropdown.Item>
-                                    </DropdownButton>
+                                        <Dropdown.Toggle style={{borderColor: Constant.COLOR1, backgroundColor: Constant.COLOR1}}>
+                                            {this.state.selectedView}
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onSelect={()=>{this.setState({selectedView: "Total"})}}>Total Number</Dropdown.Item>
+                                            <Dropdown.Item onSelect={()=>{this.setState({selectedView: "Size"})}}>Total Size</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </InputGroup>
                             
                         </Form>
@@ -213,15 +222,18 @@ class HistoryPage extends Component {
                     </Col>
                     <Col md={2}>
                         <Card>
-                            <Pie
-                                data={this.state.pieTotal}
-                                options={{
-                                    responsive: true,
-                                    maintainAspectRatio:false,
-                                }}
-                            />
+                            <Card.Body>
+                                <Pie
+                                    data={this.state.pieTotal}
+                                    options={{
+                                        responsive: true,
+                                        maintainAspectRatio:false,
+                                    }}
+                                />
+                            </Card.Body>
                         </Card>
                         <Card>
+                            <Card.Body>
                             <Pie
                                 data={this.state.pieSize}
                                 options={{
@@ -229,6 +241,7 @@ class HistoryPage extends Component {
                                     maintainAspectRatio:false,
                                 }}
                             />
+                            </Card.Body>
                         </Card>
                     </Col>
                     <Col md={2}>
