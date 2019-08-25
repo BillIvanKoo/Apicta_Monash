@@ -7,11 +7,11 @@ import * as Constants from "./helper/constants";
 class TopBar extends Component {
     render() {
         return(
-            <Navbar style={{height: "15vh", backgroundColor: Constants.COLOR4}}>
+            <Navbar style={{height: "15vh", backgroundColor: Constants.COLOR2}}>
                 <NavbarBrand>
-                    <Image
-                        src={process.env.PUBLIC_URL + '/bNetAnalytics.png'} 
-                    />
+                        <Image
+                            src={process.env.PUBLIC_URL + '/bNetAnalytics.png'} 
+                        />
                 </NavbarBrand>
                 <Navbar.Collapse>
                         <Nav.Link as={NavLink} to="/live" style={{color: Constants.COLOR1}}>Live Feed</Nav.Link>
