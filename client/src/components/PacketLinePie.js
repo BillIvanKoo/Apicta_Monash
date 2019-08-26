@@ -30,18 +30,22 @@ class PacketLinePie extends React.Component {
     }
 
     componentWillReceiveProps({ packetList, name }) {
-        let recentPacket = packetList[packetList.length - 1]
-        name = name.toLowerCase()
-        let that = this
-        this.setState({
-            pie: {
-                ...that.state.pie,
-                datasets: [{
-                    ...that.state.pie.datasets,
-                    data: [recentPacket[`${name}_tcp`], recentPacket[`${name}_udp`]]
-                }]
-            },
-        })
+        if (packetList.length > 0) {
+
+        
+            let recentPacket = packetList[packetList.length - 1]
+            name = name.toLowerCase()
+            let that = this
+            this.setState({
+                pie: {
+                    ...that.state.pie,
+                    datasets: [{
+                        ...that.state.pie.datasets,
+                        data: [recentPacket[`${name}_tcp`], recentPacket[`${name}_udp`]]
+                    }]
+                },
+            })
+        }
     }
     
     render() {
