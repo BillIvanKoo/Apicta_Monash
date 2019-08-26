@@ -81,31 +81,31 @@ class HistoryPage extends Component {
         }
     }
 
-    handleLineClick(i){
-        let that = this
-        axios.get(`${this.state.url}/packets/${this.state.packets[i].id}`).then(res => {
-            let date = new Date(res.data.timestamp * 1000)
-            that.setState({
-                activePacket: res.data,
-                pieTotal: {
-                    ...that.state.pieTotal,
-                    datasets: [{
-                        ...that.state.pieTotal.datasets,
-                        data: [res.data[`total_tcp`], res.data[`total_udp`]]
-                    }]
-                },
-                pieSize: {
-                    ...that.state.pieSize,
-                    datasets: [{
-                        ...that.state.pieSize.datasets,
-                        data: [res.data[`size_tcp`], res.data[`size_udp`]]
-                    }]
-                },
-                displayedDate: date.toLocaleString(),
-                inputDateValue: `${date.getFullYear()}-${(date.getMonth()+1 < 10 ? "0" : "") + (date.getMonth()+1)}-${(date.getDate() < 10 ? "0" : "") + date.getDate()}`,
-                selectedHour: this.getHourRange(date.getHours())
+    handleLineClick(i){ 
+            let that = this
+            axios.get(`${this.state.url}/packets/${this.state.packets[i].id}`).then(res => {
+                let date = new Date(res.data.timestamp * 1000)
+                that.setState({
+                    activePacket: res.data,
+                    pieTotal: {
+                        ...that.state.pieTotal,
+                        datasets: [{
+                            ...that.state.pieTotal.datasets,
+                            data: [res.data[`total_tcp`], res.data[`total_udp`]]
+                        }]
+                    },
+                    pieSize: {
+                        ...that.state.pieSize,
+                        datasets: [{
+                            ...that.state.pieSize.datasets,
+                            data: [res.data[`size_tcp`], res.data[`size_udp`]]
+                        }]
+                    },
+                    displayedDate: date.toLocaleString(),
+                    inputDateValue: `${date.getFullYear()}-${(date.getMonth()+1 < 10 ? "0" : "") + (date.getMonth()+1)}-${(date.getDate() < 10 ? "0" : "") + date.getDate()}`,
+                    selectedHour: this.getHourRange(date.getHours())
+                })
             })
-        })
     }
 
     getHourRange(startHour){
@@ -115,14 +115,15 @@ class HistoryPage extends Component {
     handleSubmit(){
         let that = this
         axios.get(`${this.state.url}/packets/hour/${this.state.dateHour}`).then(res => {
-            console.log(res.data);
-            let packets = res.data.sort((a,b)=>{
-                let x = b.timestamp; let y = a.timestamp;
-                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-            })
-            that.setState({
-                packets
-            }, () => { that.handleLineClick(that.state.packets.length-1) })
+            if(res.data.length > 0){
+                let packets = res.data.sort((a,b)=>{
+                    let x = b.timestamp; let y = a.timestamp;
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                })
+                that.setState({
+                    packets
+                }, () => { that.handleLineClick(that.state.packets.length-1) })
+            }
         })
     }
 
