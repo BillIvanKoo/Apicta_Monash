@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING
   }, {});
   User.associate = function(models) {
-    User.hasMany(models.Segment, {as: 'segments'})
+    User.hasMany(models.Segment, {as: 'segments', foreignKey: "userId"})
   };
   return User;
 };
