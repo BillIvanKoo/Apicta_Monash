@@ -98,61 +98,63 @@ class TotalSizeLine extends Component{
     }
 
     componentWillReceiveProps({ packetList, name }) {
-        name = name.toLowerCase()
-        let that = this
-        this.setState({
-            data: {
-                ...that.state.data,
-                datasets: ['', '_tcp', '_http', '_udp'].map((v, i) => ({
-                    ...that.state.data.datasets[i],
-                    label: v === '' ? titleCase(`${name}_packets`) : titleCase(`${name}${v}`),
-                    data: packetList.map(packet => ({
-                        x: packet.timestamp,
-                        y: packet[`${name}${v}`]
-                    })),
-                    ...this.setPointColor(packetList.map(packet => {
-                        if (!packet.connected){
-                            return Constants.DANGER
-                        }
-                        if (packet[`${name}${v}_score`] >= 0.9){
-                            return Constants.WARNING
-                        }
-                        return Constants[`COLOR${i+1}`] 
-                    })),
-                    pointStyle: packetList.map(packet =>{
-                        if (!packet.connected){
-                            return Constants.DC
-                        }
-                        if (packet[`${name}${v}_score`] >= 0.9){
-                            return Constants.ANOMALY
-                        }
-                        return Constants.NORMAL
-                    }),
-                    pointRadius: packetList.map(packet => {
-                        if (!packet.connected){
-                            return 9
-                        }
-                        if (packet[`${name}${v}_score`] >= 0.9){
-                            return 8
-                        }
-                        return 2
-                    })
-                }))
-            },
-            options:{
-                ...that.state.options,
-                scales: {
-                    xAxes: [{
-                        ...that.state.options.scales.xAxes[0],
-                        ticks: {
-                            ...that.state.options.scales.xAxes[0].ticks,
-                            max: packetList[0].timestamp,
-                            min: packetList[packetList.length - 1].timestamp
-                        }
-                    }]
+        if (packetList.length > 0){
+            name = name.toLowerCase()
+            let that = this
+            this.setState({
+                data: {
+                    ...that.state.data,
+                    datasets: ['', '_tcp', '_http', '_udp'].map((v, i) => ({
+                        ...that.state.data.datasets[i],
+                        label: v === '' ? titleCase(`${name}_packets`) : titleCase(`${name}${v}`),
+                        data: packetList.map(packet => ({
+                            x: packet.timestamp,
+                            y: packet[`${name}${v}`]
+                        })),
+                        ...this.setPointColor(packetList.map(packet => {
+                            if (!packet.connected){
+                                return Constants.DANGER
+                            }
+                            if (packet[`${name}${v}_score`] >= 0.9){
+                                return Constants.WARNING
+                            }
+                            return Constants[`COLOR${i+1}`] 
+                        })),
+                        pointStyle: packetList.map(packet =>{
+                            if (!packet.connected){
+                                return Constants.DC
+                            }
+                            if (packet[`${name}${v}_score`] >= 0.9){
+                                return Constants.ANOMALY
+                            }
+                            return Constants.NORMAL
+                        }),
+                        pointRadius: packetList.map(packet => {
+                            if (!packet.connected){
+                                return 9
+                            }
+                            if (packet[`${name}${v}_score`] >= 0.9){
+                                return 8
+                            }
+                            return 2
+                        })
+                    }))
+                },
+                options:{
+                    ...that.state.options,
+                    scales: {
+                        xAxes: [{
+                            ...that.state.options.scales.xAxes[0],
+                            ticks: {
+                                ...that.state.options.scales.xAxes[0].ticks,
+                                max: packetList[0].timestamp,
+                                min: packetList[packetList.length - 1].timestamp
+                            }
+                        }]
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     render() {

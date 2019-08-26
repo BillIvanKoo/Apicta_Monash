@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import socketIOClient from "socket.io-client";
-import axios from 'axios';
 
 import PacketLinePie from "./PacketLinePie";
 import * as Constant from "./helper/constants";
@@ -11,6 +10,7 @@ class LivePage extends React.Component {
     super();
     this.state = {
       endpoint: Constant.URL,
+      socket: null,
       packetList: [],
       activePacket: {
         port_src: [],
@@ -27,10 +27,19 @@ class LivePage extends React.Component {
 
   componentDidMount() {
     const { endpoint } = this.state;
-    const socket = socketIOClient(`${endpoint}/socket`);
-    socket.on("send packet list", data => this.setState({
-      packetList: data.packets
-    }))
+    this.setState({
+      socket: socketIOClient(`${endpoint}/socket`)
+    }, () => {
+      this.state.socket.on("send packet list", data => this.setState({
+        packetList: data.packets
+      }))
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.state.socket){
+      this.state.socket.disconnect();
+    }
   }
 
   handleClick(data) {
