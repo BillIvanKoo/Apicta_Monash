@@ -46,17 +46,12 @@ class AnomalyPage extends Component {
                         <Accordion.Collapse eventKey={packet.id}>
                             <Card.Body>
                                 <ListGroup>
-                                    {Object.keys(packet).map(key => {
-                                        if (key !== "timestamp"){
-                                            return(
-                                                <ListGroup.Item key={key}>
-                                                    {titleCase(key)}: {"" + packet[key]}
-                                                </ListGroup.Item>
-                                            )
-                                            
-                                        } else {
-                                            return 
-                                        }
+                                    {Object.keys(packet).filter(key => key !== "timestamp").map(key => {
+                                        return(
+                                            <ListGroup.Item key={key}>
+                                                {titleCase(key)}: {"" + packet[key]}
+                                            </ListGroup.Item>
+                                        )
                                     })}
                                 </ListGroup>
                             </Card.Body>
