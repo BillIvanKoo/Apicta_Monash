@@ -1,4 +1,5 @@
 const User = require('../models').User;
+const Segment = require('../models').Segment;
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
@@ -43,11 +44,20 @@ createToken = (req, res) => {
     User.findOne({
         where: {
             username: req.user.username
-        }
+        },
+        include: [
+            {
+                model: Segment, as: "segments"
+            }
+        ]
     })
     .then( user => {
+        let segmentId = user.segments.find(segment =>
+            segment.id === Number(req.body.segmentId)
+        ).id
         res.send(jwt.sign({
-            id:user.id
+            id: user.id,
+            segmentId
         }, 'secret', { expiresIn: '24h' }))
     })
 }

@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var packetsRouter = require('./routes/packets');
-
+var segmentsRouter = require('./routes/segments');
 
 const passport = require('passport');
 var Strategy = require('passport-local').Strategy;
@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/packets', packetsRouter);
-
+app.use('/segments', segmentsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
